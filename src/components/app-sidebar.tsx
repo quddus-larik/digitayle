@@ -159,25 +159,52 @@ const data = {
   ],
 }
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
   type UserType = {
-    name: string | null;
-    email: string | null;
-    avatar: string | null;
+    name: string;
+    email: string;
+    avatar: string;
   };
-  const [User, setUser] = useState<UserType>({ name: "steve", email: "steve@example.com", avatar: "https://avatar.iran.liara.run/public/12" });
+
+  const [userState, setUserState] = useState<UserType>({
+    name: "steve",
+    email: "steve@example.com",
+    avatar: "https://avatar.iran.liara.run/public/12",
+  });
+
+
+
+  async function checkUser(name: string, email: string) {
+    try {
+      const res = await fetch("/api/v1/users/check-auth", {
+        method: "POST",
+        body: JSON.stringify({ name, email }),
+        headers: { "Content-Type": "application/json" },
+      });
+      const data = await res.json();
+      console.log("API result:", data);
+    } catch (err) {
+      console.error("API error:", err);
+    }
+  }
+
+
   const { user } = useUser();
   console.log("User Defined:", user);
-
   useEffect(() => {
-  if (user) {
-    setUser({
-      name: user.fullName,
-      email: user.emailAddresses[0].emailAddress,
-      avatar: user.imageUrl,
-    });
-  }
-}, [user]);
+    if (user) {
+      const email = user.emailAddresses[0]?.emailAddress;
+      setUserState({
+        name: user.fullName ?? "",
+        email,
+        avatar: user.imageUrl ?? "",
+      });
+
+      if (email) {
+        checkUser(user.fullName as string, email as string);
+      }
+    }
+  }, [user]);
 
 
 
@@ -191,7 +218,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={User} />
+        <NavUser user={userState} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
