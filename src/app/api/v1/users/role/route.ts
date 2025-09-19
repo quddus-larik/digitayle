@@ -17,7 +17,7 @@ export async function GET(req: Request) {
     
     const collection = db.collection("users");
 
-    const result = await collection.findOne({ email });
+    const result = await collection.findOne({ email },{ projection: { role: 1, _id: 0, email: 1, username: 1 } });
 
     if (!result) {
       return NextResponse.json(
