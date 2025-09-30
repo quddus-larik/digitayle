@@ -31,6 +31,7 @@ import {
 } from "@/app/components/ui/sidebar"
 import { useClerk } from "@clerk/nextjs"
 import { MouseEventHandler } from "react"
+import { useRouter } from "next/navigation"
 
 
 export function NavUser({
@@ -51,6 +52,8 @@ export function NavUser({
       window.location.href = "/"
     })
   }
+
+  const router = useRouter();
 
   return (
     <SidebarMenu>
@@ -99,7 +102,7 @@ export function NavUser({
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={()=> router.push("/dashboard/profile")}>
                 <BadgeCheck />
                 Account
               </DropdownMenuItem>
