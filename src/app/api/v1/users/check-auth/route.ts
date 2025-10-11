@@ -13,7 +13,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "User exists", user: existing });
     }
 
-    const result = await users.insertOne({ name, email });
+    const result = await users.insertOne({ name, email, role: "customer" });
     return NextResponse.json({ message: "User inserted", result });
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 });

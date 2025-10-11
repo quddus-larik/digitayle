@@ -48,7 +48,7 @@ const Field = ({
             {label}
             {badge && <Badge>{badge}</Badge>}
         </Label>
-        <Input type={type} />
+        <Input type={type} min={(type == "number")? 0 : undefined}  />
     </>
 );
 
